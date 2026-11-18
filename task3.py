@@ -1,4 +1,8 @@
+
 import tiktoken
+import ollama
+
+
 
 texts = [
     "Hello, how are you?",
@@ -6,23 +10,24 @@ texts = [
     "Artificial Intelligence helps machines learn.",
     "Semantic search finds relevant information using embeddings."
 ]
+
 encoding = tiktoken.get_encoding("cl100k_base")
-for text in texts:
-    tokens = encoding.encode(text)
-    print(text, "->", len(tokens), "tokens")
+
+print("TOKEN COUNT RESULTS")
 
 for text in texts:
     tokens = encoding.encode(text)
     words = len(text.split())
     token_count = len(tokens)
 
-    words_per_token = words / token_count
-
     print("Text:", text)
     print("Words:", words)
     print("Tokens:", token_count)
-    print("Words per Token:", round(words_per_token, 2))
+    print("Words per Token:", round(words / token_count, 2))
     print("--------------------")
+
+
+
 
 chats_per_day = 300
 days_per_month = 30
@@ -35,40 +40,62 @@ monthly_chats = chats_per_day * days_per_month
 monthly_input_tokens = monthly_chats * input_tokens_per_chat
 monthly_output_tokens = monthly_chats * output_tokens_per_chat
 
+print("\nMONTHLY TOKEN CALCULATION")
 print("Monthly Chats:", monthly_chats)
 print("Monthly Input Tokens:", monthly_input_tokens)
 print("Monthly Output Tokens:", monthly_output_tokens)
 
 
 
-answers = [
-    "AI helps computers perform tasks like humans.",
-    "AI allows computers to think and learn.",
-    "AI performs learning and problem-solving.",
-    "AI helps machines learn from data.",
-    "AI helps computers understand and solve problems."
-]
 
-print("Temperature Test Results:")
-for i, answer in enumerate(answers):
+prompt = "Define AI in 10 words."
+
+print("\nTEMPERATURE 0 RESULTS")
+
+for i in range(5):
+    response = ollama.generate(
+        model="llama3.2:1b",
+        prompt=prompt,
+        options={"temperature": 0}
+    )
+
     print("Run:", i + 1)
-    print(answer)
+    print(response["response"])
+    print("--------------------")
 
-print("Temperature Test Summary")
-print("Total Runs: 5")
-print("Observation: Answers have different wording.")
-print("Conclusion: AI responses can vary.")
 
-print("Hallucination Test Results")
+print("\nTEMPERATURE 1.0 RESULTS")
 
-print("Without Instruction:")
-print("No reliable historical evidence found.")
+for i in range(5):
+    response = ollama.generate(
+        model="llama3.2:1b",
+        prompt=prompt,
+        options={"temperature": 1.0}
+    )
 
-print("With Instruction:")
-print("I don't know. No reliable historical evidence found.")
+    print("Run:", i + 1)
+    print(response["response"])
+    print("--------------------")
 
-print("Conclusion: Clear instructions help AI avoid unsupported answers.")
 
-print("Temperature 0 vs Temperature 1.0")
-print("Temperature 0: More consistent responses expected.")
-print("Temperature 1.0: More varied responses expected.")
+
+
+print("\nHALLUCINATION TEST")
+
+question = "Who won the 1890 World Cup?"
+
+print("\nWithout Instruction:")
+
+response = ollama.generate(
+    model="llama3.2:1b",
+    prompt=question
+)
+print(response["response"])
+
+print("\nWith Instruction:")
+
+response = ollama.generate(
+    model="llama3.2:1b",
+    prompt=question + " If you are unsure, say I don't know."
+)
+print(response["response"])
