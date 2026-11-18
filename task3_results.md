@@ -58,3 +58,17 @@ Conclusion: Asking AI to say "I don't know" when unsure can help, but it does no
 
 Note: Trainer did not provide model pricing.
 Monthly cost calculation is pending until pricing is available.
+
+**Illustrative Monthly Cost Calculation**
+
+Assumed pricing (example only):
+- Input: $0.15 per 1 million tokens
+- Output: $0.60 per 1 million tokens
+
+| Metric | Calculation | Cost |
+|---|---|---:|
+| Input cost | 10.8 × $0.15 | $1.62 |
+| Output cost | 2.7 × $0.60 | $1.62 |
+| **Total monthly cost** | | **$3.24** |
+
+Note: These are assumed example prices because the trainer did not provide actual model pricing. This is not the actual API cost.
